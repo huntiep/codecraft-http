@@ -7,6 +7,7 @@
 # DON'T EDIT THIS!
 set -e
 tmpFile=$(mktemp)
+ls -a
 ./sasm sasm-src/server.sasm $tmpFile
 chmod +x $tmpFile
 cat x* > qemu-riscv64-static
