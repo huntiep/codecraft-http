@@ -8,8 +8,10 @@
 set -e
 tmpFile=$(mktemp)
 ls -a -l
-./sasm sasm-src/server.sasm $tmpFile
+exec "sasm" "sasm-src/server.sasm" "$tmpFile"
+#./sasm sasm-src/server.sasm $tmpFile
 chmod +x $tmpFile
 cat x* > qemu-riscv64-static
 chmod +x qemu-riscv64-static
-./qemu-riscv64-static $tmpFile
+exec "qemu-riscv64-static" "$tmpFile"
+#./qemu-riscv64-static $tmpFile
