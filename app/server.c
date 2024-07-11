@@ -52,6 +52,7 @@ int main() {
 	printf("Client connected\n");
     char msg[] = "HTTP/1.1 200 OK\r\n\r\n";
     write(client, msg, sizeof(msg));
+    close(client);
 
 	close(server_fd);
 
