@@ -47,10 +47,19 @@ char* format_uint(char* buf, int i) {
         *buf = '0';
         return buf++;
     }
+    char* start = buf;
     while (i > 0) {
         *buf = (i % 10) + '0';
         i = i / 10;
         buf++;
+    }
+    char* end = buf-1;
+    while (start < end) {
+        char tmp = *start;
+        *start = *end;
+        *end = tmp;
+        start++;
+        end--;
     }
     return buf;
 }
