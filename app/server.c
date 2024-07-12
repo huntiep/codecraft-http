@@ -30,13 +30,39 @@ int streqp(char* a, int al, char* b, int bl) {
     return 1;
 }
 
-void strdupp(char* to, char* from, int from_len) {
+int strprefix(char* a, int al, char* b, int bl) {
+    if (al < bl) {
+        return 0;
+    }
+    for (int i = 0; i < bl; i++) {
+        if (a[i] != b[i]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+char* format_uint(char* buf, int i) {
+    if (i == 0) {
+        *buf = '0';
+        return buf++;
+    }
+    while (i > 0) {
+        *buf = (i % 10) + '0';
+        i = i / 10;
+        buf++;
+    }
+    return buf;
+}
+
+char* strdupp(char* to, char* from, int from_len) {
     while (from_len > 0) {
         *to = *from;
         to++;
         from++;
         from_len--;
     }
+    return to;
 }
 
 int main() {
@@ -103,9 +129,9 @@ int main() {
             break;
         }
     }
-    if (streqp(start, buf-start-1, GET, sizeof(GET))) {
+    if (streqp(start, buf-start-1, GET, sizeof(GET)-1)) {
         req.method = 1;
-    } else if (streqp(start, buf-start-1, POST, sizeof(POST))) {
+    } else if (streqp(start, buf-start-1, POST, sizeof(POST)-1)) {
         req.method = 1;
     } else {
         // Unknown method
@@ -143,7 +169,7 @@ int main() {
     }
 
     char VERSION[] = "HTTP/1.1";
-    if (streqp(start, buf-1-start, VERSION, sizeof(VERSION))) {
+    if (streqp(start, buf-1-start, VERSION, sizeof(VERSION)-1)) {
         req.version = 1;
     } else {
         req.version = -1;
@@ -158,12 +184,26 @@ int main() {
 
     char msg200[] = "HTTP/1.1 200 OK\r\n\r\n";
     char msg404[] = "HTTP/1.1 404 Not Found\r\n\r\n";
-    char* msg = msg200;
-    int msg_len = sizeof(msg200)-1;
-    if (req.path_len != 1 || *req.path != '/') {
-        msg = msg404;
-        msg_len = sizeof(msg404) - 1;
+    char* msg = msg404;
+    int msg_len = sizeof(msg404)-1;
+    if (req.path_len == 1 && *req.path == '/') {
+        msg = msg200;
+        msg_len = sizeof(msg200) - 1;
+    } else if (strprefix(req.path, req.path_len, "/echo/", 6)) {
+        char m[] = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ";
+        char* tmp = (char*) malloc(sizeof(m)-1+20+4+req.path_len-6);
+        msg = tmp;
+        tmp = strdupp(tmp, m, sizeof(m) - 1);
+        tmp = format_uint(tmp, req.path_len-6);
+        *tmp = '\r';
+        *(tmp+1) = '\n';
+        *(tmp+2) = '\r';
+        *(tmp+3) = '\n';
+        tmp += 4;
+        tmp = strdupp(tmp, req.path+6, req.path_len-6);
+        msg_len = tmp-msg;
     }
+    printf("%d\n", msg_len);
     write(client, msg, msg_len);
     close(client);
 
