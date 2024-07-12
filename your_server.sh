@@ -7,11 +7,5 @@
 # DON'T EDIT THIS!
 set -e
 tmpFile=$(mktemp)
-ls -a -l
-exec "sasm" "sasm-src/server.sasm" "$tmpFile"
-#./sasm sasm-src/server.sasm $tmpFile
-chmod +x $tmpFile
-cat x* > qemu-riscv64-static
-chmod +x qemu-riscv64-static
-exec "qemu-riscv64-static" "$tmpFile"
-#./qemu-riscv64-static $tmpFile
+gcc -lcurl -lz app/*.c -o $tmpFile
+exec "$tmpFile" "$@"
