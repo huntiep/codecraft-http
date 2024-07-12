@@ -158,8 +158,8 @@ int main() {
 
     char msg200[] = "HTTP/1.1 200 OK\r\n\r\n";
     char msg404[] = "HTTP/1.1 404 Not Found\r\n\r\n";
-    char* msg = msg200 - 1;
-    int msg_len = sizeof(msg200);
+    char* msg = msg200;
+    int msg_len = sizeof(msg200)-1;
     if (req.path_len != 1 || *req.path != '/') {
         msg = msg404;
         msg_len = sizeof(msg404) - 1;
