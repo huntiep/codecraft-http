@@ -17,6 +17,7 @@
 (define IPPROTO_IP 0)
 (define SOL_SOCKET 1)
 (define SO_REUSEADDR 2)
+(define MSG_MORE 32768)
 
 (define SYS_OPENAT 56)
 (define SYS_CLOSE 57)
@@ -30,6 +31,7 @@
 (define SYS_LISTEN 201)
 (define SYS_ACCEPT 202)
 (define SYS_CONNECT 203)
+(define SYS_SENDTO 206)
 (define SYS_SETSOCKOPT 208)
 (define SYS_BRK 214)
 (define SYS_MUNMAP 215)

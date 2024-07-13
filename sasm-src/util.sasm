@@ -390,6 +390,44 @@
 )
 
 ;; ARGS:
+;;  x10 - ptr
+;;  x11 - int
+;; RET:
+;;  x10 - ptr
+(module format-uint
+    (bne x11 x0 format)
+    (addi x11 x0 #'0')
+    (sb x10 x11)
+    (addi x10 x10 1)
+    (jalr x0 x1)
+
+    format
+    (addi x5 x0 10)
+    (add x7 x0 x10)
+
+    loop
+        (rem x6 x11 x5)
+        (div x11 x11 x5)
+        (addi x6 x6 #'0')
+        (sb x10 x6)
+        (addi x10 x10 1)
+        (bne x11 x0 loop)
+
+    (subi x5 x10 1)
+    (bge x7 x5 done)
+    rev
+        (lb x6 x7)
+        (lb x8 x5)
+        (sb x7 x8)
+        (sb x5 x6)
+        (addi x7 x7 1)
+        (subi x5 x5 1)
+        (blt x7 x5 rev)
+    done
+        (jalr x0 x1)
+)
+
+;; ARGS:
 ;;  x10 - Ptr<vec>
 ;; RET:
 ;;  x10 vec.end
@@ -414,4 +452,3 @@
     (addi x2 x2 16)
     (jalr x0 x1)
 )
-
