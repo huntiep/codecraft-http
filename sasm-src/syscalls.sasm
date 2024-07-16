@@ -17,6 +17,7 @@
 (define IPPROTO_IP 0)
 (define SOL_SOCKET 1)
 (define SO_REUSEADDR 2)
+(define SOCK_NONBLOCK 2048)
 (define MSG_MORE 32768)
 
 (define SYS_OPENAT 56)
@@ -36,6 +37,7 @@
 (define SYS_BRK 214)
 (define SYS_MUNMAP 215)
 (define SYS_MMAP 222)
+(define SYS_ACCEPT4 242)
 (define SYS_STATX 291)
 
 (module dirent64

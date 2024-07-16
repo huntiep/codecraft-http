@@ -40,6 +40,35 @@
 
     ;; ARGS:
     ;;  x10 - *HashMap
+    (module clear
+        (subi x2 x2 8)
+        (sd x2 x1)
+        (ld x25 x10)
+        (sd (+ x10 8) x0)
+        (ld x26 (+ x10 16))
+        (slli x26 x26 5)
+        (add x26 x26 x25)
+        loop
+            (beq x25 x26 done)
+            (ld x10 x25)
+            (addi x25 x25 32)
+            (beq x10 x0 loop)
+            (jal x1 free)
+            (ld x10 (- x25 16))
+            (sd (- x25 32) x0)
+            (sd (- x25 24) x0)
+            (sd (- x25 16) x0)
+            (sd (- x25 8) x0)
+            (jal x1 free)
+            (jal x0 loop)
+        done
+        (ld x1 x2)
+        (addi x2 x2 8)
+        (jalr x0 x1)
+    )
+
+    ;; ARGS:
+    ;;  x10 - *HashMap
     ;;  x11 - key: string
     ;;  x12 - key.len
     ;; RET:
